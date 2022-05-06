@@ -1,6 +1,6 @@
-# New JavaScript Project
+# Game of Life TDD project
 
-An empty project with JavaScript testing tools preconfigured. Do whatever you like with it.
+Conway's Game of Life coded using the Test Driven Development principle. For a course at Hki uni.
 
 ## Prerequisites
 
