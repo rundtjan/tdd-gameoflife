@@ -1,6 +1,8 @@
 import { expect } from "chai";
-import { initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
+import { rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
 import fs from "fs";
+import { PassThrough } from "stream";
+
 
 describe("Tests for game of life", () => {
   before(() => {
@@ -89,10 +91,16 @@ describe("Tests for game of life", () => {
     expect(data[0]).to.equal('x = 30, y = 30, rule = B3/S23');
   })
 
+  it("The rleEncoder can create a description of the board", () => {
+    const result = gameOfLife("blinker.rle");
+    const rle = rleEncoder(result.board);
+    expect(rle).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!')    
+  })
+
   it("The result file contains rle-information describing the content of the board", () =>{
-    gameOfLife("blinker.rle");
+    const result = gameOfLife("blinker.rle");
     let data = fs.readFileSync('result.rle').toString();
-    data = data.split('\n')
-    expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b30b!');
+    data = data.split('\n');
+    expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
   })
 });

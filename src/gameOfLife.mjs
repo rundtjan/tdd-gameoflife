@@ -26,6 +26,34 @@ export function initializeBoard(size){
   return board;
 }
 
+export function rleEncoder(data){
+  let result = '';
+  let current = data[0][0];
+  let counter = 1;
+  for (let i = 0; i < data.length; i++){
+    for (let j = 0; j < data[0].length; j++){
+      if (j === 0) continue;
+      if (data[i][j] === current) counter++;
+      else {
+        counter === 1 ? result += current : result += counter+current;
+        current = data[i][j];
+        counter = 1;
+      }
+      if (j === data.length-1) {
+        counter === 1 ? result += current : result += counter+current;
+        if (i != data.length-1){
+          result += '$';
+          current = data[i+1][0];
+          counter = 1;
+        } else {
+          result += '!';
+        }
+      }
+    }
+  }
+  return result;
+}
+
 export function gameOfLife(argFile) {
   let result = {};
   const file = process.argv[2] || argFile ;
@@ -49,7 +77,7 @@ export function gameOfLife(argFile) {
   }
 
   fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23\n');
-  fs.writeFileSync('result.rle', '30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b30b!', { flag: 'a+' });
+  fs.writeFileSync('result.rle', rleEncoder(board), { flag: 'a+' });
   
   result.board = board;
 
