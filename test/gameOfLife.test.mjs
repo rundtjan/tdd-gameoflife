@@ -53,7 +53,9 @@ describe("Tests for game of life", () => {
   });
 
   it("The game can interpret the rle-information", () => {
-
+    const result = gameOfLife("blinker.rle")
+    expect(result.pattern.length).to.equal(3);
+    expect(result.pattern.filter(elem => elem === 'o').length).to.equal(3);
   })
 
   xit("The pattern is drawn upon the board", () => {
