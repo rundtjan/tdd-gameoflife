@@ -109,11 +109,11 @@ export function gameOfLife(argIterations, argFile) {
 
 
   fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23\n');
-  fs.writeFileSync('result.rle', rleEncoder(board), { flag: 'a+' });
 
   for (let i = 0; i < iterations; i++){
     board = updateBoard(board);
   }
+  fs.writeFileSync('result.rle', rleEncoder(board), { flag: 'a+' });
   
   result.board = board;
 

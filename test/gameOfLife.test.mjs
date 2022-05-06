@@ -141,4 +141,10 @@ describe("Tests for game of life", () => {
     expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
   })
 
+  it("The result file contains rle-information describing the content of the board after iterations", () =>{
+    const result = gameOfLife(1, "blinker.rle");
+    let data = fs.readFileSync('result.rle').toString();
+    data = data.split('\n');
+    expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$14bo15b$14bo15b$14bo15b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
+  })//wrote the correct rle for a switched blinker as expected result A SPELLING MISTAKE!
 });
