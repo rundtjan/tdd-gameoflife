@@ -136,9 +136,9 @@ describe("Tests for game of life", () => {
 
   it("After two iteration, the blinker has switched to original direction", () => {
     const result = gameOfLife(2, "blinker.rle")//so 1 iteration, and the blinker should turn.
-    //expect(result.board[13].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
+    expect(result.board[13].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
     expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,o,o,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-    //expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
+    expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
   })
 
 });
