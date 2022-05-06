@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-export function gameOfLife() {
+export function gameOfLife(argFile) {
   let result = {};
-  const file = process.argv[2] || process.env.file ;
+  const file = process.argv[2] || argFile ;
   result.file = file;
   fs.writeFileSync('result.rle', 'something');
   let data = fs.readFileSync(file).toString();
@@ -24,4 +24,3 @@ export function gameOfLife() {
   return result;
 }
 
-gameOfLife()
