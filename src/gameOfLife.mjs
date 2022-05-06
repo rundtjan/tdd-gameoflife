@@ -30,10 +30,28 @@ export function neighbours(board, y, x){
   let neighbours = 0;
   for (let i = Math.max(0, y-1); i < Math.min(board.length, y+2); i++){
     for (let j = Math.max(0, x-1); j < Math.min(board.length, x+2); j++){
-      if (board[i][j] === 'o' && (i != y || j != x)) {neighbours++; console.log('called')}
+      if (board[i][j] === 'o' && (i != y || j != x)) {neighbours++;}
     }
   }
   return neighbours;
+}
+//so i shut of the camera to write this... it seems i can't really concentrate when i feel like there's someone watching! (sorry)
+//but it checks neighbours for every cell and then it enters the correct result according to conway's rules in the result array!
+export function updateBoard(board){
+  let result = [];
+  board.forEach(()=> result.push(new Array(board.length)));
+  let surround = 0;
+  for (let i = 0; i < board.length; i++){
+    for (let j = 0; j < board.length; j++){
+      surround = neighbours(board, i, j);
+      console.log(surround, board[i][j]);
+      if (surround > 3) result[i][j] = 'b';
+      else if (surround === 3) result[i][j] = 'o';
+      else if (surround === 2) board[i][j] === 'o' ? result[i][j] = 'o' : result[i][j] = 'b';
+      else result[i][j] = 'b';
+    }
+  }
+  return result;
 }
 
 export function rleEncoder(data){
@@ -80,7 +98,7 @@ export function gameOfLife(argIterations, argFile) {
   result.patternText = patternText;
   result.pattern = parsePattern(patternText);
 
-  const board = initializeBoard(30);
+  let board = initializeBoard(30);
 
   for (let i = 0; i < board.length; i++){
     for (let j = 0; j < board.length; j++){
@@ -88,14 +106,14 @@ export function gameOfLife(argIterations, argFile) {
     }
   }
 
-  for (let i = 0; i < board.length; i++){
-    for (let j = 0; j < board.length; j++){
-      console.log(neighbours(board, i, j));
-    }
-  }
+
 
   fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23\n');
   fs.writeFileSync('result.rle', rleEncoder(board), { flag: 'a+' });
+
+  for (let i = 0; i < iterations; i++){
+    board = updateBoard(board);
+  }
   
   result.board = board;
 

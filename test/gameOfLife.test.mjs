@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { neighbours, rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
+import { updateBoard, neighbours, rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
 import fs from "fs";
 
 
@@ -7,7 +7,7 @@ describe("Tests for game of life", () => {
   before(() => {
     if (fs.existsSync("result.rle")) fs.unlinkSync("result.rle");
   });
-/*
+
   it("Can read file name", () => {
     const result = gameOfLife(0, "blinker.rle");
     expect(result.file).to.equal("blinker.rle");
@@ -107,15 +107,29 @@ describe("Tests for game of life", () => {
     const result = gameOfLife(2, "blinker.rle")
     expect(result.iterations).to.equal(2);
   })
-*/
+
 
   it("The function neighbours checks amount of neighbours", ()=>{
     const result = neighbours([['b', 'b', 'o'],['b', 'o', 'b'], ['b', 'o', 'b']], 1, 1);
     expect(result).to.equal(2);
   })
 
-  xit("After one iteration, the blinker has switched to other direction", () => {
-    const result = gameOfLife(2, "blinker.rle")
+  it("The function neighbours can identify amount of neighbour on game-board", ()=>{
+    const game = gameOfLife(0, "blinker.rle");
+    const result = neighbours(game.board, 14, 14);
+    expect(result).to.equal(2);
+  })
+
+  it("The function updateBoard updates the board according to the rules of Conway", ()=>{
+    const board = updateBoard([['b', 'b', 'o'],['b', 'o', 'b'], ['b', 'o', 'b']])
+    expect(board[0].toString()).to.equal('b,b,b');
+    expect(board[1].toString()).to.equal('b,o,o');
+    expect(board[2].toString()).to.equal('b,b,b');
+  })
+//now to trying this on the actual board:
+  it("After one iteration, the blinker has switched to other direction", () => {
+    const result = gameOfLife(1, "blinker.rle")//so 1 iteration, and the blinker should turn.
+    expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
   })
 
 });
