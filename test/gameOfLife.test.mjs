@@ -140,23 +140,21 @@ describe("Tests for game of life", () => {
     expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,o,o,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
     expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
   })
-//this test will break, so I will comment it out... for now.
- /* it("The result file contains rle-information describing the content of the board after iterations", () =>{
+//back to the old test that broke! this should now be updated
+  it("The result file contains rle-information describing the content of the board after iterations", () =>{
     const result = gameOfLife(1, "blinker.rle");
     let data = fs.readFileSync('result.rle').toString();
     data = data.split('\n');
-    expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$14bo15b$14bo15b$14bo15b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
-  })*/
+    expect(data[1]).to.equal('o2b$o2b$o2b!');//because the pattern is placed in the upper and lefthand corner!
+  })
 
-//perhaps biting off to big a piece for TDD! So though of something like this...
 
   it("extractPattern returns result of correct dimensions", () =>{
     const game = gameOfLife(0, "blinker.rle")
     const result = extractPattern(game.board);
     expect(result.length).to.equal(3);
   })
-  //i realized that it doesn't center the pattern, atleast not without more logic, so went for this solution: the pattern is placed in
-  //the upper left corner in a quadratic result 2d-array:
+
   it("Extracts pattern part from board with extractPattern", () =>{
     const game = gameOfLife(0, "blinker.rle")
     const result = extractPattern(game.board);
@@ -180,4 +178,3 @@ describe("Tests for game of life", () => {
     expect(data[0]).to.equal('x = 3, y = 3, rule = B3/S23');
   })
 });
-//my bad, there were other old tests that broke than the one i commented out...
