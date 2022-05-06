@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { updateBoard, neighbours, rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
+import { extractPattern, updateBoard, neighbours, rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
 import fs from "fs";
 
 
@@ -146,5 +146,23 @@ describe("Tests for game of life", () => {
     let data = fs.readFileSync('result.rle').toString();
     data = data.split('\n');
     expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$14bo15b$14bo15b$14bo15b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
-  })//wrote the correct rle for a switched blinker as expected result A SPELLING MISTAKE!
+  })
+
+//perhaps biting off to big a piece for TDD! So though of something like this...
+
+  it("extractPattern returns result of correct dimensions", () =>{
+    const game = gameOfLife(0, "blinker.rle")
+    const result = extractPattern(game.board);
+    expect(result.length).to.equal(3);//? or should it be quadratic, i'm not sure... yeah, it'll do for now!
+  })
+  xit("Extracts pattern part from board with extractPattern", () =>{
+    const game = gameOfLife(0, "blinker.rle")
+    const result = extractPattern(game);
+    expect(result[0].toString()).to.equal('b,b,b')
+    expect(result[1].toString()).to.equal('o,o,o')
+    expect(result[2].toString()).to.equal('b,b,b')
+  })
+  xit("Only stores that part of the board which contains patterns", () =>{
+
+  })
 });

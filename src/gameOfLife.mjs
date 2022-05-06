@@ -35,8 +35,7 @@ export function neighbours(board, y, x){
   }
   return neighbours;
 }
-//so i shut of the camera to write this... it seems i can't really concentrate when i feel like there's someone watching! (sorry)
-//but it checks neighbours for every cell and then it enters the correct result according to conway's rules in the result array!
+
 export function updateBoard(board){
   let result = [];
   board.forEach(()=> result.push(new Array(board.length)));
@@ -44,7 +43,6 @@ export function updateBoard(board){
   for (let i = 0; i < board.length; i++){
     for (let j = 0; j < board.length; j++){
       surround = neighbours(board, i, j);
-      console.log(surround, board[i][j]);
       if (surround > 3) result[i][j] = 'b';
       else if (surround === 3) result[i][j] = 'o';
       else if (surround === 2) board[i][j] === 'o' ? result[i][j] = 'o' : result[i][j] = 'b';
@@ -79,6 +77,26 @@ export function rleEncoder(data){
       }
     }
   }
+  return result;
+}
+
+export function extractPattern(board){
+  let [smallestY, smallestX, biggestY, biggestX]= [board.length, board.length, -1, -1];
+  for (let i = 0; i < board.length; i++){
+    for (let j = 0; j < board.length; j++){
+      if (board[i][j] != 'b'){
+        smallestX = Math.min(j, smallestX);
+        biggestX = Math.max(j, biggestX);
+        smallestY = Math.min(i, smallestY);
+        biggestY = Math.max(i, biggestY);
+      }
+    }
+  }
+  let width = biggestX - smallestX + 1;
+  let height = biggestY - smallestY + 1;
+  let size = Math.max(width, height);
+  let result = []
+  for (let i = 0; i < size; i++) result.push(new Array(size));
   return result;
 }
 
