@@ -28,4 +28,29 @@ describe("Tests for game of life", () => {
     expect(result.pattern).to.equal('3o!');
   })
 
+  it("The game produces a board of height 30", () =>{
+    const result = gameOfLife();
+    expect(result.startBoard.length).to.equal(30);
+  })
+
+  it("The board consists of arrays of length 30", () =>{
+    const result = gameOfLife();
+    const lengths = [];
+    result.startBoard.forEach(array => lengths.push(array.length))
+    expect(lengths.filter(length => length === 30).length).to.equal(result.startBoard.length);
+  })
+
+  it("The board is full of dead cells before entering the pattern", () =>{
+    const result = gameOfLife();
+    let checker = true;
+    for (let i = 0; i < result.startBoard.length; i++){
+      for (let j = 0; j < result.startBoard.length; j++){
+        if (result.startBoard[i][j] != 'o') checker = false;
+      }
+    }
+    expect(checker).to.equal(true);
+  })
+
+
+
 });
