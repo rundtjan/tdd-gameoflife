@@ -5,6 +5,7 @@
   "license": "TODO",
   "private": true,
   "dependencies": {
+    "dotenv": "^16.0.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
@@ -20,7 +21,7 @@
     "parallel": true
   },
   "scripts": {
-    "test": "mocha 'test/**/*.test.mjs'",
+    "test": "mocha 'test/**/*.test.mjs' -r dotenv/config",
     "autotest": "npm run test -- --watch",
     "format": "prettier --write ."
   }
