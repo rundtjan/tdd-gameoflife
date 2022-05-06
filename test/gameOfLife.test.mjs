@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { gameOfLife } from "../src/gameOfLife.mjs";
+import { initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
 import fs from "fs";
 
 describe("Tests for game of life", () => {
@@ -28,25 +28,25 @@ describe("Tests for game of life", () => {
   });
 
   it("The game produces a board of height 30", () => {
-    const result = gameOfLife("blinker.rle");
-    expect(result.startBoard.length).to.equal(30);
+    const result = initializeBoard(30);
+    expect(result.length).to.equal(30);
   });
 
   it("The board consists of arrays of length 30", () => {
-    const result = gameOfLife("blinker.rle");
+    const result = initializeBoard(30);
     const lengths = [];
-    result.startBoard.forEach((array) => lengths.push(array.length));
+    result.forEach((array) => lengths.push(array.length));
     expect(lengths.filter((length) => length === 30).length).to.equal(
-      result.startBoard.length
+      result.length
     );
   });
 
   it("The board is full of dead cells before entering the pattern", () => {
-    const result = gameOfLife("blinker.rle");
+    const result = initializeBoard(30);
     let checker = true;
-    for (let i = 0; i < result.startBoard.length; i++) {
-      for (let j = 0; j < result.startBoard.length; j++) {
-        if (result.startBoard[i][j] != "b") checker = false;
+    for (let i = 0; i < result.length; i++) {
+      for (let j = 0; j < result.length; j++) {
+        if (result[i][j] != "b") {checker = false;}
       }
     }
     expect(checker).to.equal(true);
@@ -58,27 +58,35 @@ describe("Tests for game of life", () => {
     expect(result.pattern.filter(elem => elem === 'o').length).to.equal(3);
   })
 
-  xit("The pattern is drawn upon the board", () => {
+  it("The pattern is drawn upon the board", () => {
     const result = gameOfLife("blinker.rle");
     let checker = true;
-    for (let i = 0; i < result.drawnBoard.length; i++) {
-      for (let j = 0; j < result.drawnBoard.length; j++) {
+    for (let i = 0; i < result.board.length; i++) {
+      for (let j = 0; j < result.board.length; j++) {
         if (
-          result.drawnBoard[i][j] != "b" &&
+          result.board[i][j] != "b" &&
           !(
             i === 14 &&
             [13, 14, 15].includes(j) &&
-            result.drawnBoard[i][j] == "o"
+            result.board[i][j] == "o"
           )
         )
           checker = false;
         if (
           i === 14 &&
           [13, 14, 15].includes(j) &&
-          result.drawnBoard[i][j] != "o"
+          result.board[i][j] != "o"
         ) checker = false;
       }
     }
     expect(checker).to.equal(true);
   });
+
+  xit("The result file contains rle-information describing the state of the board", () =>{
+    gameOfLife("blinker.rle");
+    let data = fs.readFileSync('result.rle').toString();
+    data = data.split('\n')
+    expect(data[0]).to.equal('x = 30, y = 30, rule = B3/S23');
+    //expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b30b!');
+  })
 });

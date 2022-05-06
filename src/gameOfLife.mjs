@@ -15,11 +15,22 @@ function parsePattern(patternText){
   return result;
 }
 
+export function initializeBoard(size){
+  let board = [];
+  for (let i = 0; i < size; i++) board.push(new Array(size));
+  for (let i = 0; i < size; i++){
+    for (let j = 0; j < size; j++){
+      board[i][j] = 'b';
+    }
+  }
+  return board;
+}
+
 export function gameOfLife(argFile) {
   let result = {};
   const file = process.argv[2] || argFile ;
   result.file = file;
-  fs.writeFileSync('result.rle', 'something');
+  fs.writeFileSync('result.rle', '');
   let data = fs.readFileSync(file).toString();
   data = data.split('\n');
   data = data.filter(elem => elem[0] != "#");
@@ -28,15 +39,18 @@ export function gameOfLife(argFile) {
   const patternText = data[1];
   result.patternText = patternText;
   result.pattern = parsePattern(patternText);
-  const board = [];
-  for (let i = 0; i < 30; i++) board.push(new Array(30));
+
+  const board = initializeBoard(30);
+
   for (let i = 0; i < board.length; i++){
     for (let j = 0; j < board.length; j++){
-      board[i][j] = 'b';
+      if (i === 14 && [13, 14, 15].includes(j)) {board[i][j] = result.pattern[j-13];}
     }
   }
-  result.startBoard = board.slice();
-  result.drawnBoard = board.slice();
+
+  fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23');
+  
+  result.board = board;
 
   return result;
 }
