@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-function parsePattern(patternText){
+export function parsePattern(patternText){
   let patternData = patternText.split('')
   let result = [];
   for (let i = 0; i < patternData.length-1; i++){
@@ -96,42 +96,34 @@ export function extractPattern(board){
   let height = biggestY - smallestY + 1;
   let size = Math.max(width, height);
   let result = []
-  for (let i = 0; i < size; i++) result.push(new Array(size));//this was were we finished in the last test
+  for (let i = 0; i < size; i++) result.push(new Array(size));
   for (let i = smallestY; i < smallestY+size; i++){
     for (let j = smallestX; j < smallestX+size; j++ ){
       result[i - smallestY][j - smallestX] = board[i][j];
     }
-  }//this here paints or renders the pattern into the result 2d-array, let's test it!
+  }
   return result;
 }
 
 export function gameOfLife(argIterations, argFile) {
-  let result = {};
+
   const file = process.argv[2] || argFile;
   const iterations = process.argv[3] || argIterations;
-  result.iterations = iterations
-  result.file = file;
+
   fs.writeFileSync('result.rle', '');
   let data = fs.readFileSync(file).toString();
   data = data.split('\n');
   data = data.filter(elem => elem[0] != "#");
   const dimensions = data[0].split(', ru')[0];
-  result.dimensions = dimensions;
   const patternText = data[1];
-  result.patternText = patternText;
-  result.pattern = parsePattern(patternText);
-
+  const pattern = parsePattern(patternText);
   let board = initializeBoard(30);
 
   for (let i = 0; i < board.length; i++){
     for (let j = 0; j < board.length; j++){
-      if (i === 14 && [13, 14, 15].includes(j)) {board[i][j] = result.pattern[j-13];}
+      if (i === 14 && [13, 14, 15].includes(j)) {board[i][j] = pattern[j-13];}
     }
   }
-
-
-
-  fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23\n');
 
   for (let i = 0; i < iterations; i++){
     board = updateBoard(board);
@@ -140,9 +132,7 @@ export function gameOfLife(argIterations, argFile) {
   let resultPattern = extractPattern(board);
   fs.writeFileSync('result.rle', 'x = ' + resultPattern[0].length + ', y = ' +resultPattern.length + ', rule = B3/S23\n');
   fs.writeFileSync('result.rle', rleEncoder(resultPattern), { flag: 'a+' });
-  
-  result.board = board;
 
-  return result;
+  return { pattern, iterations, file, board, dimensions, patternText};
 }
 

@@ -1,7 +1,14 @@
 import { expect } from "chai";
-import { extractPattern, updateBoard, neighbours, rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
+import {
+  parsePattern,
+  extractPattern,
+  updateBoard,
+  neighbours,
+  rleEncoder,
+  initializeBoard,
+  gameOfLife,
+} from "../src/gameOfLife.mjs";
 import fs from "fs";
-
 
 describe("Tests for game of life", () => {
   before(() => {
@@ -47,17 +54,19 @@ describe("Tests for game of life", () => {
     let checker = true;
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result.length; j++) {
-        if (result[i][j] != "b") {checker = false;}
+        if (result[i][j] != "b") {
+          checker = false;
+        }
       }
     }
     expect(checker).to.equal(true);
   });
 
   it("The game can interpret the rle-information", () => {
-    const result = gameOfLife(0, "blinker.rle")
+    const result = gameOfLife(0, "blinker.rle");
     expect(result.pattern.length).to.equal(3);
-    expect(result.pattern.filter(elem => elem === 'o').length).to.equal(3);
-  })
+    expect(result.pattern.filter((elem) => elem === "o").length).to.equal(3);
+  });
 
   it("The pattern is drawn upon the board", () => {
     const result = gameOfLife(0, "blinker.rle");
@@ -66,115 +75,123 @@ describe("Tests for game of life", () => {
       for (let j = 0; j < result.board.length; j++) {
         if (
           result.board[i][j] != "b" &&
-          !(
-            i === 14 &&
-            [13, 14, 15].includes(j) &&
-            result.board[i][j] == "o"
-          )
+          !(i === 14 && [13, 14, 15].includes(j) && result.board[i][j] == "o")
         )
           checker = false;
-        if (
-          i === 14 &&
-          [13, 14, 15].includes(j) &&
-          result.board[i][j] != "o"
-        ) checker = false;
+        if (i === 14 && [13, 14, 15].includes(j) && result.board[i][j] != "o")
+          checker = false;
       }
     }
     expect(checker).to.equal(true);
   });
 
-  /*it("The result file contains rle-information describing the dimensions of the board", () =>{
-    gameOfLife(0,"blinker.rle");
-    let data = fs.readFileSync('result.rle').toString();
-    data = data.split('\n')
-    expect(data[0]).to.equal('x = 30, y = 30, rule = B3/S23');
-  })*/
-
   it("The rleEncoder can create a description of the board", () => {
     const result = gameOfLife(0, "blinker.rle");
     const rle = rleEncoder(result.board);
-    expect(rle).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!')    
-  })
+    expect(rle).to.equal(
+      "30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!"
+    );
+  });
 
-  /*it("The result file contains rle-information describing the content of the board", () =>{
-    const result = gameOfLife(0, "blinker.rle");
-    let data = fs.readFileSync('result.rle').toString();
-    data = data.split('\n');
-    expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
-  })*/
-
-  it("The game can use the iteration parameter", () =>{
-    const result = gameOfLife(2, "blinker.rle")
+  it("The game can use the iteration parameter", () => {
+    const result = gameOfLife(2, "blinker.rle");
     expect(result.iterations).to.equal(2);
-  })
+  });
 
-
-  it("The function neighbours checks amount of neighbours", ()=>{
-    const result = neighbours([['b', 'b', 'o'],['b', 'o', 'b'], ['b', 'o', 'b']], 1, 1);
+  it("The function neighbours checks amount of neighbours", () => {
+    const result = neighbours(
+      [
+        ["b", "b", "o"],
+        ["b", "o", "b"],
+        ["b", "o", "b"],
+      ],
+      1,
+      1
+    );
     expect(result).to.equal(2);
-  })
+  });
 
-  it("The function neighbours can identify amount of neighbour on game-board", ()=>{
+  it("The function neighbours can identify amount of neighbour on game-board", () => {
     const game = gameOfLife(0, "blinker.rle");
     const result = neighbours(game.board, 14, 14);
     expect(result).to.equal(2);
-  })
+  });
 
-  it("The function updateBoard updates the board according to the rules of Conway", ()=>{
-    const board = updateBoard([['b', 'b', 'o'],['b', 'o', 'b'], ['b', 'o', 'b']])
-    expect(board[0].toString()).to.equal('b,b,b');
-    expect(board[1].toString()).to.equal('b,o,o');
-    expect(board[2].toString()).to.equal('b,b,b');
-  })
-//now to trying this on the actual board: fails still exactly like it should...
+  it("The function updateBoard updates the board according to the rules of Conway", () => {
+    const board = updateBoard([
+      ["b", "b", "o"],
+      ["b", "o", "b"],
+      ["b", "o", "b"],
+    ]);
+    expect(board[0].toString()).to.equal("b,b,b");
+    expect(board[1].toString()).to.equal("b,o,o");
+    expect(board[2].toString()).to.equal("b,b,b");
+  });
+  //now to trying this on the actual board: fails still exactly like it should...
   it("After one iteration, the blinker has switched to other direction", () => {
-    const result = gameOfLife(1, "blinker.rle")//so 1 iteration, and the blinker should turn.
-    expect(result.board[13].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-    expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-    expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-  })
+    const result = gameOfLife(1, "blinker.rle"); //so 1 iteration, and the blinker should turn.
+    expect(result.board[13].toString()).to.equal(
+      "b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
+    );
+    expect(result.board[14].toString()).to.equal(
+      "b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
+    );
+    expect(result.board[15].toString()).to.equal(
+      "b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
+    );
+  });
 
   it("After two iteration, the blinker has switched to original direction", () => {
-    const result = gameOfLife(2, "blinker.rle")//so 1 iteration, and the blinker should turn.
-    expect(result.board[13].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-    expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,o,o,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-    expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
-  })
-//back to the old test that broke! this should now be updated
-  it("The result file contains rle-information describing the content of the board after iterations", () =>{
+    const result = gameOfLife(2, "blinker.rle"); //so 1 iteration, and the blinker should turn.
+    expect(result.board[13].toString()).to.equal(
+      "b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
+    );
+    expect(result.board[14].toString()).to.equal(
+      "b,b,b,b,b,b,b,b,b,b,b,b,b,o,o,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
+    );
+    expect(result.board[15].toString()).to.equal(
+      "b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
+    );
+  });
+
+  it("The result file contains rle-information describing the content of the board after iterations", () => {
     const result = gameOfLife(1, "blinker.rle");
-    let data = fs.readFileSync('result.rle').toString();
-    data = data.split('\n');
-    expect(data[1]).to.equal('o2b$o2b$o2b!');//because the pattern is placed in the upper and lefthand corner!
-  })
+    let data = fs.readFileSync("result.rle").toString();
+    data = data.split("\n");
+    expect(data[1]).to.equal("o2b$o2b$o2b!");
+  });
 
-
-  it("extractPattern returns result of correct dimensions", () =>{
-    const game = gameOfLife(0, "blinker.rle")
+  it("extractPattern returns result of correct dimensions", () => {
+    const game = gameOfLife(0, "blinker.rle");
     const result = extractPattern(game.board);
     expect(result.length).to.equal(3);
-  })
+  });
 
-  it("Extracts pattern part from board with extractPattern", () =>{
-    const game = gameOfLife(0, "blinker.rle")
+  it("Extracts pattern part from board with extractPattern", () => {
+    const game = gameOfLife(0, "blinker.rle");
     const result = extractPattern(game.board);
-    expect(result[0].toString()).to.equal('o,o,o')
-    expect(result[1].toString()).to.equal('b,b,b')
-    expect(result[2].toString()).to.equal('b,b,b')
-  })
-  
-  it("Only stores that part of the board which contains patterns", () =>{
+    expect(result[0].toString()).to.equal("o,o,o");
+    expect(result[1].toString()).to.equal("b,b,b");
+    expect(result[2].toString()).to.equal("b,b,b");
+  });
+
+  it("Only stores that part of the board which contains patterns", () => {
     const result = gameOfLife(0, "blinker.rle");
-    let data = fs.readFileSync('result.rle').toString();
-    data = data.split('\n');
-    expect(data[1]).to.equal('3o$3b$3b!');
+    let data = fs.readFileSync("result.rle").toString();
+    data = data.split("\n");
+    expect(data[1]).to.equal("3o$3b$3b!");
+  });
 
-  })
+  it("The result file contains rle-information describing the dimensions of the result pattern", () => {
+    gameOfLife(0, "blinker.rle");
+    let data = fs.readFileSync("result.rle").toString();
+    data = data.split("\n");
+    expect(data[0]).to.equal("x = 3, y = 3, rule = B3/S23");
+  });
 
-  it("The result file contains rle-information describing the dimensions of the result pattern", () =>{
-    gameOfLife(0,"blinker.rle");
-    let data = fs.readFileSync('result.rle').toString();
-    data = data.split('\n')
-    expect(data[0]).to.equal('x = 3, y = 3, rule = B3/S23');
+  it("parsePattern returns pattern with correct width, including height", () =>{
+    const result = parsePattern('2o$2o!')
+    expect(result.length).to.equal(2);
+    expect(result[0].length).to.equal(2);
   })
 });
