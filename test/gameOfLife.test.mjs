@@ -126,10 +126,12 @@ describe("Tests for game of life", () => {
     expect(board[1].toString()).to.equal('b,o,o');
     expect(board[2].toString()).to.equal('b,b,b');
   })
-//now to trying this on the actual board:
+//now to trying this on the actual board: fails still exactly like it should...
   it("After one iteration, the blinker has switched to other direction", () => {
     const result = gameOfLife(1, "blinker.rle")//so 1 iteration, and the blinker should turn.
+    expect(result.board[13].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
     expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
+    expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
   })
 
 });
