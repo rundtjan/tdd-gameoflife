@@ -54,7 +54,7 @@ export function rleEncoder(data){
   return result;
 }
 
-export function gameOfLife(argFile) {
+export function gameOfLife(iterations, argFile) {
   let result = {};
   const file = process.argv[2] || argFile ;
   result.file = file;
