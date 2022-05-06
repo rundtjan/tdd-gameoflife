@@ -83,12 +83,12 @@ describe("Tests for game of life", () => {
     expect(checker).to.equal(true);
   });
 
-  it("The result file contains rle-information describing the dimensions of the board", () =>{
+  /*it("The result file contains rle-information describing the dimensions of the board", () =>{
     gameOfLife(0,"blinker.rle");
     let data = fs.readFileSync('result.rle').toString();
     data = data.split('\n')
     expect(data[0]).to.equal('x = 30, y = 30, rule = B3/S23');
-  })
+  })*/
 
   it("The rleEncoder can create a description of the board", () => {
     const result = gameOfLife(0, "blinker.rle");
@@ -96,12 +96,12 @@ describe("Tests for game of life", () => {
     expect(rle).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!')    
   })
 
-  it("The result file contains rle-information describing the content of the board", () =>{
+  /*it("The result file contains rle-information describing the content of the board", () =>{
     const result = gameOfLife(0, "blinker.rle");
     let data = fs.readFileSync('result.rle').toString();
     data = data.split('\n');
     expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
-  })
+  })*/
 
   it("The game can use the iteration parameter", () =>{
     const result = gameOfLife(2, "blinker.rle")
@@ -140,13 +140,13 @@ describe("Tests for game of life", () => {
     expect(result.board[14].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,o,o,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
     expect(result.board[15].toString()).to.equal('b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b')
   })
-
-  it("The result file contains rle-information describing the content of the board after iterations", () =>{
+//this test will break, so I will comment it out... for now.
+ /* it("The result file contains rle-information describing the content of the board after iterations", () =>{
     const result = gameOfLife(1, "blinker.rle");
     let data = fs.readFileSync('result.rle').toString();
     data = data.split('\n');
     expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$14bo15b$14bo15b$14bo15b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
-  })
+  })*/
 
 //perhaps biting off to big a piece for TDD! So though of something like this...
 
@@ -155,7 +155,8 @@ describe("Tests for game of life", () => {
     const result = extractPattern(game.board);
     expect(result.length).to.equal(3);
   })
-  
+  //i realized that it doesn't center the pattern, atleast not without more logic, so went for this solution: the pattern is placed in
+  //the upper left corner in a quadratic result 2d-array:
   it("Extracts pattern part from board with extractPattern", () =>{
     const game = gameOfLife(0, "blinker.rle")
     const result = extractPattern(game.board);
@@ -163,7 +164,20 @@ describe("Tests for game of life", () => {
     expect(result[1].toString()).to.equal('b,b,b')
     expect(result[2].toString()).to.equal('b,b,b')
   })
-  xit("Only stores that part of the board which contains patterns", () =>{
+  
+  it("Only stores that part of the board which contains patterns", () =>{
+    const result = gameOfLife(0, "blinker.rle");
+    let data = fs.readFileSync('result.rle').toString();
+    data = data.split('\n');
+    expect(data[1]).to.equal('3o$3b$3b!');
 
   })
+
+  it("The result file contains rle-information describing the dimensions of the result pattern", () =>{
+    gameOfLife(0,"blinker.rle");
+    let data = fs.readFileSync('result.rle').toString();
+    data = data.split('\n')
+    expect(data[0]).to.equal('x = 3, y = 3, rule = B3/S23');
+  })
 });
+//my bad, there were other old tests that broke than the one i commented out...

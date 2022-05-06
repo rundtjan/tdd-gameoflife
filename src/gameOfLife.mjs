@@ -94,18 +94,14 @@ export function extractPattern(board){
   }
   let width = biggestX - smallestX + 1;
   let height = biggestY - smallestY + 1;
-  console.log(width, height)
   let size = Math.max(width, height);
-  console.log('size', size)
   let result = []
-  for (let i = 0; i < size; i++) result.push(new Array(size));
-  console.log('result before ', result)
+  for (let i = 0; i < size; i++) result.push(new Array(size));//this was were we finished in the last test
   for (let i = smallestY; i < smallestY+size; i++){
     for (let j = smallestX; j < smallestX+size; j++ ){
       result[i - smallestY][j - smallestX] = board[i][j];
     }
-  }
-  console.log('result after ', result)
+  }//this here paints or renders the pattern into the result 2d-array, let's test it!
   return result;
 }
 
@@ -140,7 +136,10 @@ export function gameOfLife(argIterations, argFile) {
   for (let i = 0; i < iterations; i++){
     board = updateBoard(board);
   }
-  fs.writeFileSync('result.rle', rleEncoder(board), { flag: 'a+' });
+
+  let resultPattern = extractPattern(board);
+  fs.writeFileSync('result.rle', 'x = ' + resultPattern[0].length + ', y = ' +resultPattern.length + ', rule = B3/S23\n');
+  fs.writeFileSync('result.rle', rleEncoder(resultPattern), { flag: 'a+' });
   
   result.board = board;
 
