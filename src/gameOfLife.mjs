@@ -26,6 +26,16 @@ export function initializeBoard(size){
   return board;
 }
 
+export function neighbours(board, y, x){
+  let neighbours = 0;
+  for (let i = Math.max(0, y-1); i < Math.min(board.length, y+2); i++){
+    for (let j = Math.max(0, x-1); j < Math.min(board.length, x+2); j++){
+      if (board[i][j] === 'o' && (i != y || j != x)) {neighbours++; console.log('called')}
+    }
+  }
+  return neighbours;
+}
+
 export function rleEncoder(data){
   let result = '';
   let current = data[0][0];
@@ -75,6 +85,12 @@ export function gameOfLife(argIterations, argFile) {
   for (let i = 0; i < board.length; i++){
     for (let j = 0; j < board.length; j++){
       if (i === 14 && [13, 14, 15].includes(j)) {board[i][j] = result.pattern[j-13];}
+    }
+  }
+
+  for (let i = 0; i < board.length; i++){
+    for (let j = 0; j < board.length; j++){
+      console.log(neighbours(board, i, j));
     }
   }
 

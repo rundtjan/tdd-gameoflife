@@ -1,14 +1,13 @@
 import { expect } from "chai";
-import { rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
+import { neighbours, rleEncoder, initializeBoard, gameOfLife } from "../src/gameOfLife.mjs";
 import fs from "fs";
-import { PassThrough } from "stream";
 
 
 describe("Tests for game of life", () => {
   before(() => {
     if (fs.existsSync("result.rle")) fs.unlinkSync("result.rle");
   });
-
+/*
   it("Can read file name", () => {
     const result = gameOfLife(0, "blinker.rle");
     expect(result.file).to.equal("blinker.rle");
@@ -107,6 +106,16 @@ describe("Tests for game of life", () => {
   it("The game can use the iteration parameter", () =>{
     const result = gameOfLife(2, "blinker.rle")
     expect(result.iterations).to.equal(2);
+  })
+*/
+
+  it("The function neighbours checks amount of neighbours", ()=>{
+    const result = neighbours([['b', 'b', 'o'],['b', 'o', 'b'], ['b', 'o', 'b']], 1, 1);
+    expect(result).to.equal(2);
+  })
+
+  xit("After one iteration, the blinker has switched to other direction", () => {
+    const result = gameOfLife(2, "blinker.rle")
   })
 
 });
