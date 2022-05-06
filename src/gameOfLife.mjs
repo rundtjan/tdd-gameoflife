@@ -54,9 +54,11 @@ export function rleEncoder(data){
   return result;
 }
 
-export function gameOfLife(iterations, argFile) {
+export function gameOfLife(argIterations, argFile) {
   let result = {};
-  const file = process.argv[2] || argFile ;
+  const file = process.argv[2] || argFile;
+  const iterations = process.argv[3] || argIterations;
+  result.iterations = iterations
   result.file = file;
   fs.writeFileSync('result.rle', '');
   let data = fs.readFileSync(file).toString();

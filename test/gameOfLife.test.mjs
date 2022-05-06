@@ -104,5 +104,9 @@ describe("Tests for game of life", () => {
     expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!');
   })
 
+  it("The game can use the iteration parameter", () =>{
+    const result = gameOfLife(2, "blinker.rle")
+    expect(result.iterations).to.equal(2);
+  })
 
 });
