@@ -153,13 +153,14 @@ describe("Tests for game of life", () => {
   it("extractPattern returns result of correct dimensions", () =>{
     const game = gameOfLife(0, "blinker.rle")
     const result = extractPattern(game.board);
-    expect(result.length).to.equal(3);//? or should it be quadratic, i'm not sure... yeah, it'll do for now!
+    expect(result.length).to.equal(3);
   })
-  xit("Extracts pattern part from board with extractPattern", () =>{
+  
+  it("Extracts pattern part from board with extractPattern", () =>{
     const game = gameOfLife(0, "blinker.rle")
-    const result = extractPattern(game);
-    expect(result[0].toString()).to.equal('b,b,b')
-    expect(result[1].toString()).to.equal('o,o,o')
+    const result = extractPattern(game.board);
+    expect(result[0].toString()).to.equal('o,o,o')
+    expect(result[1].toString()).to.equal('b,b,b')
     expect(result[2].toString()).to.equal('b,b,b')
   })
   xit("Only stores that part of the board which contains patterns", () =>{

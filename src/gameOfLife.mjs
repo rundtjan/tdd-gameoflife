@@ -94,9 +94,18 @@ export function extractPattern(board){
   }
   let width = biggestX - smallestX + 1;
   let height = biggestY - smallestY + 1;
+  console.log(width, height)
   let size = Math.max(width, height);
+  console.log('size', size)
   let result = []
   for (let i = 0; i < size; i++) result.push(new Array(size));
+  console.log('result before ', result)
+  for (let i = smallestY; i < smallestY+size; i++){
+    for (let j = smallestX; j < smallestX+size; j++ ){
+      result[i - smallestY][j - smallestX] = board[i][j];
+    }
+  }
+  console.log('result after ', result)
   return result;
 }
 
