@@ -48,7 +48,8 @@ export function gameOfLife(argFile) {
     }
   }
 
-  fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23');
+  fs.writeFileSync('result.rle', 'x = 30, y = 30, rule = B3/S23\n');
+  fs.writeFileSync('result.rle', '30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b30b!', { flag: 'a+' });
   
   result.board = board;
 

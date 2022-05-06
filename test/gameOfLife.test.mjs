@@ -82,11 +82,17 @@ describe("Tests for game of life", () => {
     expect(checker).to.equal(true);
   });
 
-  xit("The result file contains rle-information describing the state of the board", () =>{
+  it("The result file contains rle-information describing the dimensions of the board", () =>{
     gameOfLife("blinker.rle");
     let data = fs.readFileSync('result.rle').toString();
     data = data.split('\n')
     expect(data[0]).to.equal('x = 30, y = 30, rule = B3/S23');
-    //expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b30b!');
+  })
+
+  it("The result file contains rle-information describing the content of the board", () =>{
+    gameOfLife("blinker.rle");
+    let data = fs.readFileSync('result.rle').toString();
+    data = data.split('\n')
+    expect(data[1]).to.equal('30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b30b!');
   })
 });
