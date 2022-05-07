@@ -144,6 +144,17 @@ export function extractPattern(board){
 }
 
 export function drawOnBoard(board, pattern){
+  let startY, startX;
+  let middle = Math.floor(board.length / 2) - 1;
+  if (pattern.length <= 2) startY = middle;
+  else startY = middle - Math.floor(pattern.length / 2);
+  if (pattern[0].length <= 2) startX = middle;
+  else startX = middle - Math.floor(pattern[0].length / 2);
+  for (let i = startY; i < pattern.length + startY; i++){
+    for (let j = startX; j < pattern[0].length + startX; j++){
+      board[i][j] = pattern[i-startY][j-startX];
+    }
+  }
   return board;
 }
 

@@ -120,9 +120,9 @@ describe("Tests for game of life", () => {
     expect(board[1].toString()).to.equal("b,o,o");
     expect(board[2].toString()).to.equal("b,b,b");
   });
-  //now to trying this on the actual board: fails still exactly like it should...
+
   it("After one iteration, the blinker has switched to other direction", () => {
-    const result = gameOfLife(1, "blinker.rle"); //so 1 iteration, and the blinker should turn.
+    const result = gameOfLife(1, "blinker.rle"); 
     expect(result.board[13].toString()).to.equal(
       "b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
     );
@@ -135,7 +135,7 @@ describe("Tests for game of life", () => {
   });
 
   it("After two iteration, the blinker has switched to original direction", () => {
-    const result = gameOfLife(2, "blinker.rle"); //so 1 iteration, and the blinker should turn.
+    const result = gameOfLife(2, "blinker.rle"); 
     expect(result.board[13].toString()).to.equal(
       "b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
     );
@@ -202,6 +202,11 @@ describe("Tests for game of life", () => {
     expect(result[1].toString()).to.equal('o,o');
   })
 
+  it("parsePattern(2) returns the pattern described in the patternText: blinker", () =>{
+    const result = parsePattern2([{x: 3, y: 1}, '3o!'])
+    expect(result[0].toString()).to.equal('o,o,o');
+  })
+
   it("drawOnBoard will return a board of the correct size", () => {
     let board = initializeBoard(30);
     const pattern = parsePattern2([{x: 2, y: 2}, '2o$2o!']);
@@ -218,5 +223,14 @@ describe("Tests for game of life", () => {
     expect(board[14][15]).to.equal('o');
     expect(board[15][14]).to.equal('o');
     expect(board[15][15]).to.equal('o');
+  })
+//I felt like doing another tests... just to see that it works before refactoring to usage in real life..
+  it("drawOnBoard returns a board with the pattern on it: blinker", () => {
+    let board = initializeBoard(30);
+    const pattern = parsePattern2([{x: 3, y: 1}, '3o!']);
+    board = drawOnBoard(board, pattern);
+    expect(board[14][13]).to.equal('o');
+    expect(board[14][14]).to.equal('o');
+    expect(board[14][15]).to.equal('o');
   })
 });
