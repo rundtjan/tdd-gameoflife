@@ -28,7 +28,7 @@ export function parsePattern(data){
     for (let j = 0; j < dimensions.x; j++){
       if (result[i][j] == null) result[i][j] = 'b';
     }
-  }// a loop that checks for cells left empty - and fills them with "b"!
+  }
   return result;
 }
 
@@ -104,7 +104,13 @@ export function parsePatternData(data){
   let dimensions = {};
   dimensions.x = dimensionsString.split('x = ')[1].split(',')[0]
   dimensions.y = dimensionsString.split('y = ')[1]
-  const patternText = data[1];
+  let patternText = '';
+  if (data.length === 2){//so it checks for several lines, if only one line of pattern, nice, 
+    patternText = data[1];
+  } else {//otherwise it starts looping and adding lines, like this:
+    for (let i = 1; i < data.length; i++) patternText += data[i];
+  }
+  
   return [dimensions, patternText];
 }
 

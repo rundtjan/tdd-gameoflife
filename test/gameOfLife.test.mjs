@@ -196,13 +196,13 @@ describe("Tests for game of life", () => {
     expect(result[0].length).to.equal(2);
   })
 
-  it("parsePattern(2) returns the pattern described in the patternText", () =>{
+  it("parsePattern returns the pattern described in the patternText", () =>{
     const result = parsePattern([{x: 2, y: 2}, '2o$2o!'])
     expect(result[0].toString()).to.equal('o,o');
     expect(result[1].toString()).to.equal('o,o');
   })
 
-  it("parsePattern(2) returns the pattern described in the patternText: blinker", () =>{
+  it("parsePattern returns the pattern described in the patternText: blinker", () =>{
     const result = parsePattern([{x: 3, y: 1}, '3o!'])
     expect(result[0].toString()).to.equal('o,o,o');
   })
@@ -240,11 +240,17 @@ describe("Tests for game of life", () => {
     expect(result[1].toString()).to.equal('o,o');
   })
 
-  it("parsePatter will fill up empty space in the end of lines with dead cells", () =>{
+  it("parsePattern will fill up empty space in the end of lines with dead cells", () =>{
     const result = parsePattern([{x: 3, y: 2}, '2o $o !'])
     expect(result[0].toString()).to.equal('o,o,b');
     expect(result[1].toString()).to.equal('o,b,b');
   })
 
+  it("parsePatternData can handle many lines of celldata", () =>{
+    const result = parsePatternData('x = 3, y = 2, rule = B3/S23\n3o$\n3o!');
+    expect(result[0].x).to.equal('3')
+    expect(result[0].y).to.equal('2')
+    expect(result[1]).to.equal('3o$3o!')//will work on that for a while!
+  })
   
 });
