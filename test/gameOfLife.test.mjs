@@ -80,7 +80,6 @@ describe("Tests for game of life", () => {
 
   it("The rleEncoder can create a description of the board", () => {
     const result = gameOfLife(0, "blinker.rle");
-    //result.board.forEach(elem => console.log(elem.toString()))
     const rle = rleEncoder(result.board);
     expect(rle).to.equal(
       "30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!"
@@ -225,7 +224,7 @@ describe("Tests for game of life", () => {
     expect(board[15][14]).to.equal('o');
     expect(board[15][15]).to.equal('o');
   })
-//I felt like doing another tests... just to see that it works before refactoring to usage in real life..
+
   it("drawOnBoard returns a board with the pattern on it: blinker", () => {
     let board = initializeBoard(30);
     const pattern = parsePattern([{x: 3, y: 1}, '3o!']);
@@ -233,5 +232,11 @@ describe("Tests for game of life", () => {
     expect(board[14][13]).to.equal('o');
     expect(board[14][14]).to.equal('o');
     expect(board[14][15]).to.equal('o');
+  })
+
+  it("parsePatter can handle empty spaces between characters", () =>{
+    const result = parsePattern([{x: 2, y: 2}, '2o $2o !'])
+    expect(result[0].toString()).to.equal('o,o');
+    expect(result[1].toString()).to.equal('o,o');
   })
 });

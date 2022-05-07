@@ -24,6 +24,11 @@ export function parsePattern(data){
       }
     }
   }
+  for (let i = 0; i < dimensions.y; i++){
+    for (let j = 0; j < dimensions.x; j++){
+      if (result[i][j] == null) result[i][j] = 'b';
+    }
+  }
   return result;
 }
 
