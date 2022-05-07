@@ -1,21 +1,6 @@
 import fs from 'fs';
 
-export function parsePattern(patternText){
-  let patternData = patternText.split('')
-  let result = [];
-  for (let i = 0; i < patternData.length-1; i++){
-    if (patternData[i] === 'o' || patternData[i] === 'b') result.push(patternData[i])
-    else if (!isNaN(patternData[i])){
-      for (let j = 0; j < patternData[i]; j++) {
-        result.push(patternData[i+1]);
-      }
-      i++;
-    }
-  }
-  return result;
-}
-
-export function parsePattern2(data){
+export function parsePattern(data){
   let dimensions = data[0];
   let patternData = data[1];
   let result = [];
@@ -158,33 +143,30 @@ export function drawOnBoard(board, pattern){
   return board;
 }
 
+function writeToFile(resultPattern){
+  fs.writeFileSync('result.rle', '');
+  fs.writeFileSync('result.rle', 'x = ' + resultPattern[0].length + ', y = ' +resultPattern.length + ', rule = B3/S23\n');
+  fs.writeFileSync('result.rle', rleEncoder(resultPattern), { flag: 'a+' });
+}
+
 export function gameOfLife(argIterations, argFile) {
 
   const file = process.argv[2] || argFile;
   const iterations = process.argv[3] || argIterations;
 
-  fs.writeFileSync('result.rle', '');
   let data = fs.readFileSync(file).toString();
-
-  const pattern = parsePattern(parsePatternData(data)[1]);
+  
+  const pattern = parsePattern(parsePatternData(data));
+  
   let board = initializeBoard(30);
-
-  for (let i = 0; i < board.length; i++){
-    for (let j = 0; j < board.length; j++){
-      if (i === 14 && [13, 14, 15].includes(j)) {board[i][j] = pattern[j-13];}
-    }
-  }
-
-  let board2 = initializeBoard(30);
-  //board2 = drawPatternOnBoard(board2, pattern);
+  
+  board = drawOnBoard(board, pattern);
 
   for (let i = 0; i < iterations; i++){
     board = updateBoard(board);
   }
 
-  let resultPattern = extractPattern(board);
-  fs.writeFileSync('result.rle', 'x = ' + resultPattern[0].length + ', y = ' +resultPattern.length + ', rule = B3/S23\n');
-  fs.writeFileSync('result.rle', rleEncoder(resultPattern), { flag: 'a+' });
+  writeToFile(extractPattern(board));
 
-  return { pattern, iterations, file, board, /*dimensions, patternText*/};
+  return { pattern, iterations, file, board };
 }

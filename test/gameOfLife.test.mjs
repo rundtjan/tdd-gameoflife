@@ -3,7 +3,6 @@ import {
   drawOnBoard,
   parsePatternData,
   parsePattern,
-  parsePattern2,
   extractPattern,
   updateBoard,
   neighbours,
@@ -57,8 +56,9 @@ describe("Tests for game of life", () => {
 
   it("The game can interpret the rle-information", () => {
     const result = gameOfLife(0, "blinker.rle");
-    expect(result.pattern.length).to.equal(3);
-    expect(result.pattern.filter((elem) => elem === "o").length).to.equal(3);
+    expect(result.pattern.length).to.equal(1);
+    expect(result.pattern[0].length).to.equal(3);
+    expect(result.pattern[0].filter((elem) => elem === "o").length).to.equal(3);
   });
 
   it("The pattern is drawn upon the board", () => {
@@ -80,6 +80,7 @@ describe("Tests for game of life", () => {
 
   it("The rleEncoder can create a description of the board", () => {
     const result = gameOfLife(0, "blinker.rle");
+    //result.board.forEach(elem => console.log(elem.toString()))
     const rle = rleEncoder(result.board);
     expect(rle).to.equal(
       "30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!"
@@ -191,25 +192,25 @@ describe("Tests for game of life", () => {
   })
 
   it("parsePattern returns pattern with correct width, including height", () =>{
-    const result = parsePattern2([{x: 2, y: 2}, '2o$2o!'])
+    const result = parsePattern([{x: 2, y: 2}, '2o$2o!'])
     expect(result.length).to.equal(2);
     expect(result[0].length).to.equal(2);
   })
 
   it("parsePattern(2) returns the pattern described in the patternText", () =>{
-    const result = parsePattern2([{x: 2, y: 2}, '2o$2o!'])
+    const result = parsePattern([{x: 2, y: 2}, '2o$2o!'])
     expect(result[0].toString()).to.equal('o,o');
     expect(result[1].toString()).to.equal('o,o');
   })
 
   it("parsePattern(2) returns the pattern described in the patternText: blinker", () =>{
-    const result = parsePattern2([{x: 3, y: 1}, '3o!'])
+    const result = parsePattern([{x: 3, y: 1}, '3o!'])
     expect(result[0].toString()).to.equal('o,o,o');
   })
 
   it("drawOnBoard will return a board of the correct size", () => {
     let board = initializeBoard(30);
-    const pattern = parsePattern2([{x: 2, y: 2}, '2o$2o!']);
+    const pattern = parsePattern([{x: 2, y: 2}, '2o$2o!']);
     board = drawOnBoard(board, pattern);
     expect(board.length).to.equal(30);
     expect(board[0].length).to.equal(30);
@@ -217,7 +218,7 @@ describe("Tests for game of life", () => {
 
   it("drawOnBoard returns a board with the pattern on it", () => {
     let board = initializeBoard(30);
-    const pattern = parsePattern2([{x: 2, y: 2}, '2o$2o!']);
+    const pattern = parsePattern([{x: 2, y: 2}, '2o$2o!']);
     board = drawOnBoard(board, pattern);
     expect(board[14][14]).to.equal('o');
     expect(board[14][15]).to.equal('o');
@@ -227,7 +228,7 @@ describe("Tests for game of life", () => {
 //I felt like doing another tests... just to see that it works before refactoring to usage in real life..
   it("drawOnBoard returns a board with the pattern on it: blinker", () => {
     let board = initializeBoard(30);
-    const pattern = parsePattern2([{x: 3, y: 1}, '3o!']);
+    const pattern = parsePattern([{x: 3, y: 1}, '3o!']);
     board = drawOnBoard(board, pattern);
     expect(board[14][13]).to.equal('o');
     expect(board[14][14]).to.equal('o');
