@@ -15,6 +15,24 @@ export function parsePattern(patternText){
   return result;
 }
 
+export function parsePattern2(data){
+  let dimensions = data[0];
+  let patternData = data[1];
+  let result = [];
+
+  /*let result = [];
+  for (let i = 0; i < patternData.length-1; i++){
+    if (patternData[i] === 'o' || patternData[i] === 'b') result.push(patternData[i])
+    else if (!isNaN(patternData[i])){
+      for (let j = 0; j < patternData[i]; j++) {
+        result.push(patternData[i+1]);
+      }
+      i++;
+    }
+  }*/
+  return result;
+}
+
 export function initializeBoard(size){
   let board = [];
   for (let i = 0; i < size; i++) board.push(new Array(size));
@@ -80,6 +98,17 @@ export function rleEncoder(data){
   return result;
 }
 
+export function parsePatternData(data){
+  data = data.split('\n');
+  data = data.filter(elem => elem[0] != "#");
+  let dimensionsString = data[0].split(', ru')[0];
+  let dimensions = {};
+  dimensions.x = dimensionsString.split('x = ')[1].split(',')[0]
+  dimensions.y = dimensionsString.split('y = ')[1]
+  const patternText = data[1];
+  return [dimensions, patternText];
+}
+
 export function extractPattern(board){
   let [smallestY, smallestX, biggestY, biggestX]= [board.length, board.length, -1, -1];
   for (let i = 0; i < board.length; i++){
@@ -112,6 +141,7 @@ export function gameOfLife(argIterations, argFile) {
 
   fs.writeFileSync('result.rle', '');
   let data = fs.readFileSync(file).toString();
+  //const pattern = parsePattern(parsePatternData(data))
   data = data.split('\n');
   data = data.filter(elem => elem[0] != "#");
   const dimensions = data[0].split(', ru')[0];

@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import {
+  parsePatternData,
   parsePattern,
   extractPattern,
   updateBoard,
@@ -188,9 +189,18 @@ describe("Tests for game of life", () => {
     data = data.split("\n");
     expect(data[0]).to.equal("x = 3, y = 3, rule = B3/S23");
   });
+//decided to parse a bit more - the dimensions should be returned as an object with width and height:
+  it("The function parsePatternData extracts dimensions and patterninfo from raw data from file", () =>{
+    let data = fs.readFileSync("blinker.rle").toString();
+    const result = parsePatternData(data);
+    expect(result[0].x).to.equal("3");
+    expect(result[0].y).to.equal("1");
+    expect(result[1]).to.equal("3o!");
+  })
 
-  it("parsePattern returns pattern with correct width, including height", () =>{
-    const result = parsePattern('2o$2o!')
+//naturally, here we should use the dimensions from the rle-file!
+  xit("parsePattern returns pattern with correct width, including height", () =>{
+    const result = parsePattern('x = 2, y = 2', '2o$2o!')
     expect(result.length).to.equal(2);
     expect(result[0].length).to.equal(2);
   })
