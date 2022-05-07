@@ -28,7 +28,7 @@ export function parsePattern(data){
     for (let j = 0; j < dimensions.x; j++){
       if (result[i][j] == null) result[i][j] = 'b';
     }
-  }
+  }// a loop that checks for cells left empty - and fills them with "b"!
   return result;
 }
 

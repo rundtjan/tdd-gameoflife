@@ -239,4 +239,12 @@ describe("Tests for game of life", () => {
     expect(result[0].toString()).to.equal('o,o');
     expect(result[1].toString()).to.equal('o,o');
   })
+
+  it("parsePatter will fill up empty space in the end of lines with dead cells", () =>{
+    const result = parsePattern([{x: 3, y: 2}, '2o $o !'])
+    expect(result[0].toString()).to.equal('o,o,b');
+    expect(result[1].toString()).to.equal('o,b,b');
+  })
+
+  
 });
