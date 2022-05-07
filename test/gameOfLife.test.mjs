@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import {
+  drawOnBoard,
   parsePatternData,
   parsePattern,
   parsePattern2,
@@ -25,16 +26,6 @@ describe("Tests for game of life", () => {
   it("Will create a rle-file as a result", () => {
     gameOfLife(0, "blinker.rle");
     expect(fs.existsSync("result.rle")).to.equal(true);
-  });
-
-  it("Can read dimensions of pattern in file", () => {
-    const result = gameOfLife(0, "blinker.rle");
-    expect(result.dimensions).to.equal("x = 3, y = 1");
-  });
-
-  it("Can read the pattern line from the file", () => {
-    const result = gameOfLife(0, "blinker.rle");
-    expect(result.patternText).to.equal("3o!");
   });
 
   it("The game produces a board of height 30", () => {
@@ -190,7 +181,7 @@ describe("Tests for game of life", () => {
     data = data.split("\n");
     expect(data[0]).to.equal("x = 3, y = 3, rule = B3/S23");
   });
-//decided to parse a bit more - the dimensions should be returned as an object with width and height:
+
   it("The function parsePatternData extracts dimensions and patterninfo from raw data from file", () =>{
     let data = fs.readFileSync("blinker.rle").toString();
     const result = parsePatternData(data);
@@ -199,10 +190,33 @@ describe("Tests for game of life", () => {
     expect(result[1]).to.equal("3o!");
   })
 
-//naturally, here we should use the dimensions from the rle-file!
   it("parsePattern returns pattern with correct width, including height", () =>{
     const result = parsePattern2([{x: 2, y: 2}, '2o$2o!'])
     expect(result.length).to.equal(2);
     expect(result[0].length).to.equal(2);
+  })
+
+  it("parsePattern(2) returns the pattern described in the patternText", () =>{
+    const result = parsePattern2([{x: 2, y: 2}, '2o$2o!'])
+    expect(result[0].toString()).to.equal('o,o');
+    expect(result[1].toString()).to.equal('o,o');
+  })
+
+  it("drawOnBoard will return a board of the correct size", () => {
+    let board = initializeBoard(30);
+    const pattern = parsePattern2([{x: 2, y: 2}, '2o$2o!']);
+    board = drawOnBoard(board, pattern);
+    expect(board.length).to.equal(30);
+    expect(board[0].length).to.equal(30);
+  })
+
+  it("drawOnBoard returns a board with the pattern on it", () => {
+    let board = initializeBoard(30);
+    const pattern = parsePattern2([{x: 2, y: 2}, '2o$2o!']);
+    board = drawOnBoard(board, pattern);
+    expect(board[14][14]).to.equal('o');
+    expect(board[14][15]).to.equal('o');
+    expect(board[15][14]).to.equal('o');
+    expect(board[15][15]).to.equal('o');
   })
 });

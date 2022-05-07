@@ -22,16 +22,23 @@ export function parsePattern2(data){
   for (let i = 0; i < dimensions.y; i++){
     result.push(new Array(dimensions.x));
   }
-  /*let result = [];
-  for (let i = 0; i < patternData.length-1; i++){
-    if (patternData[i] === 'o' || patternData[i] === 'b') result.push(patternData[i])
-    else if (!isNaN(patternData[i])){
-      for (let j = 0; j < patternData[i]; j++) {
-        result.push(patternData[i+1]);
+  let char = 0;
+  for (let i = 0; i < dimensions.y; i++){
+    for (let j = 0; j < dimensions.x+1; j++){
+      if (patternData[char] === 'o' || patternData[char] === 'b') { 
+        result[i][j] = patternData[char];
+        char++;
+      } else if (!isNaN(patternData[char])){
+        for (let k = 0; k < parseInt(patternData[char]); k++){
+          result[i][j+k] = patternData[char+1];
+        }
+        j++;
+        char += 2;
+      } else {
+        char++;
       }
-      i++;
     }
-  }*/
+  }
   return result;
 }
 
@@ -136,6 +143,10 @@ export function extractPattern(board){
   return result;
 }
 
+export function drawOnBoard(board, pattern){
+  return board;
+}
+
 export function gameOfLife(argIterations, argFile) {
 
   const file = process.argv[2] || argFile;
@@ -143,12 +154,8 @@ export function gameOfLife(argIterations, argFile) {
 
   fs.writeFileSync('result.rle', '');
   let data = fs.readFileSync(file).toString();
-  //const pattern = parsePattern(parsePatternData(data))
-  data = data.split('\n');
-  data = data.filter(elem => elem[0] != "#");
-  const dimensions = data[0].split(', ru')[0];
-  const patternText = data[1];
-  const pattern = parsePattern(patternText);
+
+  const pattern = parsePattern(parsePatternData(data)[1]);
   let board = initializeBoard(30);
 
   for (let i = 0; i < board.length; i++){
@@ -156,6 +163,9 @@ export function gameOfLife(argIterations, argFile) {
       if (i === 14 && [13, 14, 15].includes(j)) {board[i][j] = pattern[j-13];}
     }
   }
+
+  let board2 = initializeBoard(30);
+  //board2 = drawPatternOnBoard(board2, pattern);
 
   for (let i = 0; i < iterations; i++){
     board = updateBoard(board);
@@ -165,6 +175,5 @@ export function gameOfLife(argIterations, argFile) {
   fs.writeFileSync('result.rle', 'x = ' + resultPattern[0].length + ', y = ' +resultPattern.length + ', rule = B3/S23\n');
   fs.writeFileSync('result.rle', rleEncoder(resultPattern), { flag: 'a+' });
 
-  return { pattern, iterations, file, board, dimensions, patternText};
+  return { pattern, iterations, file, board, /*dimensions, patternText*/};
 }
-
