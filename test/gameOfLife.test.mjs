@@ -252,5 +252,19 @@ describe("Tests for game of life", () => {
     expect(result[0].y).to.equal('2')
     expect(result[1]).to.equal('3o$3o!')//will work on that for a while!
   })
+
+  it("parsePattern parses a glider correclty", () =>{
+    const result = parsePattern([{x: 3, y: 3}, 'bob$2bo$3o!'])
+    expect(result[0].toString()).to.equal('b,o,b');
+    expect(result[1].toString()).to.equal('b,b,o');
+    expect(result[2].toString()).to.equal('o,o,o');
+  })
+
+  it("parsePatternData can parse a glider", () =>{
+    const result = parsePatternData('x = 3, y = 3, rule = B3/S23\nbob$2bo$3o!');
+    expect(result[0].x).to.equal('3')
+    expect(result[0].y).to.equal('3')
+    expect(result[1]).to.equal('bob$2bo$3o!')
+  })
   
 });
