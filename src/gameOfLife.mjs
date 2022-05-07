@@ -19,7 +19,9 @@ export function parsePattern2(data){
   let dimensions = data[0];
   let patternData = data[1];
   let result = [];
-
+  for (let i = 0; i < dimensions.y; i++){
+    result.push(new Array(dimensions.x));
+  }
   /*let result = [];
   for (let i = 0; i < patternData.length-1; i++){
     if (patternData[i] === 'o' || patternData[i] === 'b') result.push(patternData[i])

@@ -2,6 +2,7 @@ import { expect } from "chai";
 import {
   parsePatternData,
   parsePattern,
+  parsePattern2,
   extractPattern,
   updateBoard,
   neighbours,
@@ -199,8 +200,8 @@ describe("Tests for game of life", () => {
   })
 
 //naturally, here we should use the dimensions from the rle-file!
-  xit("parsePattern returns pattern with correct width, including height", () =>{
-    const result = parsePattern('x = 2, y = 2', '2o$2o!')
+  it("parsePattern returns pattern with correct width, including height", () =>{
+    const result = parsePattern2([{x: 2, y: 2}, '2o$2o!'])
     expect(result.length).to.equal(2);
     expect(result[0].length).to.equal(2);
   })
