@@ -82,7 +82,7 @@ describe("Tests for game of life", () => {
     const result = gameOfLife(0, "blinker.rle");
     const rle = rleEncoder(result.board);
     expect(rle).to.equal(
-      "30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!"
+      "30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$13b3o14b$30b$3\n0b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b$30b!"
     );
   });
 
@@ -250,7 +250,7 @@ describe("Tests for game of life", () => {
     const result = parsePatternData('x = 3, y = 2, rule = B3/S23\n3o$\n3o!');
     expect(result[0].x).to.equal('3')
     expect(result[0].y).to.equal('2')
-    expect(result[1]).to.equal('3o$3o!')//will work on that for a while!
+    expect(result[1]).to.equal('3o$3o!')
   })
 
   it("parsePattern parses a glider correclty", () =>{
@@ -265,6 +265,12 @@ describe("Tests for game of life", () => {
     expect(result[0].x).to.equal('3')
     expect(result[0].y).to.equal('3')
     expect(result[1]).to.equal('bob$2bo$3o!')
+  })
+
+  it("If the patterndescription is longer than 70 characters, the rleEncoder divides it into several lines", ()=>{
+    const result = gameOfLife(0, "blinker.rle");
+    const rle = rleEncoder(result.board);
+    expect(rle.split('\n').length).to.equal(2);
   })
   
 });

@@ -9,21 +9,18 @@ export function parsePattern(data) {
   }
   let char = 0;
   for (let i = 0; i < parseInt(dimensions.y); i++) {
-    for (let j = 0; j < parseInt(dimensions.x) + 1; j++) {//but strangely enough - didn't break any tests!
+    for (let j = 0; j < parseInt(dimensions.x) + 1; j++) {
       if (patternData[char] === "o" || patternData[char] === "b") {
         result[i][j] = patternData[char];
         char++;
-        //continue;
       } else if (!isNaN(patternData[char])) {
         for (let k = 0; k < parseInt(patternData[char]); k++) {
           result[i][j + k] = patternData[char + 1];
         }
         j++;
         char += 2;
-        //continue;
       } else {
         char++;
-        //continue;
       }
     }
   }
@@ -100,6 +97,9 @@ export function rleEncoder(data) {
       }
     }
   }
+  while(result.split('\n')[result.split('\n').length-1].length > 70){
+    result = result.substring(0, result.length - result.split('\n')[result.split('\n').length-1].length + 70) + '\n' + result.substring(result.length - result.split('\n')[result.split('\n').length-1].length+70, result.length);
+  } 
   return result;
 }
 
@@ -186,13 +186,13 @@ function printToScreen(board) {
 }
 
 export function gameOfLife(argIterations, argFile) {
-  const file = /*process.argv[2] ||*/ argFile;
-  const iterations = /*process.argv[3] ||*/ argIterations;
+  const file = argFile;
+  const iterations = argIterations;
 
   let data = fs.readFileSync(file).toString();
-  console.log('parsed data ', parsePatternData(data))
+
   const pattern = parsePattern(parsePatternData(data));
-  console.log('pattern ', pattern)
+
   let board = initializeBoard(30);
 
   board = drawOnBoard(board, pattern);
