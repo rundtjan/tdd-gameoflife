@@ -97,9 +97,22 @@ export function rleEncoder(data) {
       }
     }
   }
-  while(result.split('\n')[result.split('\n').length-1].length > 70){
-    result = result.substring(0, result.length - result.split('\n')[result.split('\n').length-1].length + 70) + '\n' + result.substring(result.length - result.split('\n')[result.split('\n').length-1].length+70, result.length);
-  } 
+  while (result.split("\n")[result.split("\n").length - 1].length > 70) {
+    result =
+      result.substring(
+        0,
+        result.length -
+          result.split("\n")[result.split("\n").length - 1].length +
+          70
+      ) +
+      "\n" +
+      result.substring(
+        result.length -
+          result.split("\n")[result.split("\n").length - 1].length +
+          70,
+        result.length
+      );
+  }
   return result;
 }
 

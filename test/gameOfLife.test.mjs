@@ -11,11 +11,16 @@ import {
   gameOfLife,
 } from "../src/gameOfLife.mjs";
 import fs from "fs";
+import { markAsUntransferable } from "worker_threads";
 
 describe("Tests for game of life", () => {
   before(() => {
     if (fs.existsSync("result.rle")) fs.unlinkSync("result.rle");
   });
+
+  after(() => {
+    if (fs.existsSync("result.rle")) fs.unlinkSync("result.rle");
+  })
 
   it("Can read file name", () => {
     const result = gameOfLife(0, "blinker.rle");
@@ -122,7 +127,7 @@ describe("Tests for game of life", () => {
   });
 
   it("After one iteration, the blinker has switched to other direction", () => {
-    const result = gameOfLife(1, "blinker.rle"); 
+    const result = gameOfLife(1, "blinker.rle");
     expect(result.board[13].toString()).to.equal(
       "b,b,b,b,b,b,b,b,b,b,b,b,b,b,o,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
     );
@@ -135,7 +140,7 @@ describe("Tests for game of life", () => {
   });
 
   it("After two iteration, the blinker has switched to original direction", () => {
-    const result = gameOfLife(2, "blinker.rle"); 
+    const result = gameOfLife(2, "blinker.rle");
     expect(result.board[13].toString()).to.equal(
       "b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b"
     );
@@ -182,95 +187,94 @@ describe("Tests for game of life", () => {
     expect(data[0]).to.equal("x = 3, y = 3, rule = B3/S23");
   });
 
-  it("The function parsePatternData extracts dimensions and patterninfo from raw data from file", () =>{
+  it("The function parsePatternData extracts dimensions and patterninfo from raw data from file", () => {
     let data = fs.readFileSync("blinker.rle").toString();
     const result = parsePatternData(data);
     expect(result[0].x).to.equal("3");
     expect(result[0].y).to.equal("1");
     expect(result[1]).to.equal("3o!");
-  })
+  });
 
-  it("parsePattern returns pattern with correct width, including height", () =>{
-    const result = parsePattern([{x: 2, y: 2}, '2o$2o!'])
+  it("parsePattern returns pattern with correct width, including height", () => {
+    const result = parsePattern([{ x: 2, y: 2 }, "2o$2o!"]);
     expect(result.length).to.equal(2);
     expect(result[0].length).to.equal(2);
-  })
+  });
 
-  it("parsePattern returns the pattern described in the patternText", () =>{
-    const result = parsePattern([{x: 2, y: 2}, '2o$2o!'])
-    expect(result[0].toString()).to.equal('o,o');
-    expect(result[1].toString()).to.equal('o,o');
-  })
+  it("parsePattern returns the pattern described in the patternText", () => {
+    const result = parsePattern([{ x: 2, y: 2 }, "2o$2o!"]);
+    expect(result[0].toString()).to.equal("o,o");
+    expect(result[1].toString()).to.equal("o,o");
+  });
 
-  it("parsePattern returns the pattern described in the patternText: blinker", () =>{
-    const result = parsePattern([{x: 3, y: 1}, '3o!'])
-    expect(result[0].toString()).to.equal('o,o,o');
-  })
+  it("parsePattern returns the pattern described in the patternText: blinker", () => {
+    const result = parsePattern([{ x: 3, y: 1 }, "3o!"]);
+    expect(result[0].toString()).to.equal("o,o,o");
+  });
 
   it("drawOnBoard will return a board of the correct size", () => {
     let board = initializeBoard(30);
-    const pattern = parsePattern([{x: 2, y: 2}, '2o$2o!']);
+    const pattern = parsePattern([{ x: 2, y: 2 }, "2o$2o!"]);
     board = drawOnBoard(board, pattern);
     expect(board.length).to.equal(30);
     expect(board[0].length).to.equal(30);
-  })
+  });
 
   it("drawOnBoard returns a board with the pattern on it", () => {
     let board = initializeBoard(30);
-    const pattern = parsePattern([{x: 2, y: 2}, '2o$2o!']);
+    const pattern = parsePattern([{ x: 2, y: 2 }, "2o$2o!"]);
     board = drawOnBoard(board, pattern);
-    expect(board[14][14]).to.equal('o');
-    expect(board[14][15]).to.equal('o');
-    expect(board[15][14]).to.equal('o');
-    expect(board[15][15]).to.equal('o');
-  })
+    expect(board[14][14]).to.equal("o");
+    expect(board[14][15]).to.equal("o");
+    expect(board[15][14]).to.equal("o");
+    expect(board[15][15]).to.equal("o");
+  });
 
   it("drawOnBoard returns a board with the pattern on it: blinker", () => {
     let board = initializeBoard(30);
-    const pattern = parsePattern([{x: 3, y: 1}, '3o!']);
+    const pattern = parsePattern([{ x: 3, y: 1 }, "3o!"]);
     board = drawOnBoard(board, pattern);
-    expect(board[14][13]).to.equal('o');
-    expect(board[14][14]).to.equal('o');
-    expect(board[14][15]).to.equal('o');
-  })
+    expect(board[14][13]).to.equal("o");
+    expect(board[14][14]).to.equal("o");
+    expect(board[14][15]).to.equal("o");
+  });
 
-  it("parsePatter can handle empty spaces between characters", () =>{
-    const result = parsePattern([{x: 2, y: 2}, '2o $2o !'])
-    expect(result[0].toString()).to.equal('o,o');
-    expect(result[1].toString()).to.equal('o,o');
-  })
+  it("parsePatter can handle empty spaces between characters", () => {
+    const result = parsePattern([{ x: 2, y: 2 }, "2o $2o !"]);
+    expect(result[0].toString()).to.equal("o,o");
+    expect(result[1].toString()).to.equal("o,o");
+  });
 
-  it("parsePattern will fill up empty space in the end of lines with dead cells", () =>{
-    const result = parsePattern([{x: 3, y: 2}, '2o $o !'])
-    expect(result[0].toString()).to.equal('o,o,b');
-    expect(result[1].toString()).to.equal('o,b,b');
-  })
+  it("parsePattern will fill up empty space in the end of lines with dead cells", () => {
+    const result = parsePattern([{ x: 3, y: 2 }, "2o $o !"]);
+    expect(result[0].toString()).to.equal("o,o,b");
+    expect(result[1].toString()).to.equal("o,b,b");
+  });
 
-  it("parsePatternData can handle many lines of celldata", () =>{
-    const result = parsePatternData('x = 3, y = 2, rule = B3/S23\n3o$\n3o!');
-    expect(result[0].x).to.equal('3')
-    expect(result[0].y).to.equal('2')
-    expect(result[1]).to.equal('3o$3o!')
-  })
+  it("parsePatternData can handle many lines of celldata", () => {
+    const result = parsePatternData("x = 3, y = 2, rule = B3/S23\n3o$\n3o!");
+    expect(result[0].x).to.equal("3");
+    expect(result[0].y).to.equal("2");
+    expect(result[1]).to.equal("3o$3o!");
+  });
 
-  it("parsePattern parses a glider correclty", () =>{
-    const result = parsePattern([{x: 3, y: 3}, 'bob$2bo$3o!'])
-    expect(result[0].toString()).to.equal('b,o,b');
-    expect(result[1].toString()).to.equal('b,b,o');
-    expect(result[2].toString()).to.equal('o,o,o');
-  })
+  it("parsePattern parses a glider correclty", () => {
+    const result = parsePattern([{ x: 3, y: 3 }, "bob$2bo$3o!"]);
+    expect(result[0].toString()).to.equal("b,o,b");
+    expect(result[1].toString()).to.equal("b,b,o");
+    expect(result[2].toString()).to.equal("o,o,o");
+  });
 
-  it("parsePatternData can parse a glider", () =>{
-    const result = parsePatternData('x = 3, y = 3, rule = B3/S23\nbob$2bo$3o!');
-    expect(result[0].x).to.equal('3')
-    expect(result[0].y).to.equal('3')
-    expect(result[1]).to.equal('bob$2bo$3o!')
-  })
+  it("parsePatternData can parse a glider", () => {
+    const result = parsePatternData("x = 3, y = 3, rule = B3/S23\nbob$2bo$3o!");
+    expect(result[0].x).to.equal("3");
+    expect(result[0].y).to.equal("3");
+    expect(result[1]).to.equal("bob$2bo$3o!");
+  });
 
-  it("If the patterndescription is longer than 70 characters, the rleEncoder divides it into several lines", ()=>{
+  it("If the patterndescription is longer than 70 characters, the rleEncoder divides it into several lines", () => {
     const result = gameOfLife(0, "blinker.rle");
     const rle = rleEncoder(result.board);
-    expect(rle.split('\n').length).to.equal(2);
-  })
-  
+    expect(rle.split("\n").length).to.equal(2);
+  });
 });
